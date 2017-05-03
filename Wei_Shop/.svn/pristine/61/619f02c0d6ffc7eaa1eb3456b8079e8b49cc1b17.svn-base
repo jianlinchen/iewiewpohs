@@ -1,0 +1,437 @@
+//
+//  MassEmailController.m
+//  Wei_Shop
+//
+//  Created by dzr on 15/11/2.
+//  Copyright © 2015年 cjl. All rights reserved.
+//
+
+#import "MassEmailController.h"
+#import "MassEmailTableCell.h"
+#import "PostEmailController.h"
+@interface MassEmailController ()<UITableViewDelegate,UITableViewDataSource>{
+    NSMutableArray *sendArray;
+    BOOL cellButton;
+    int kl;
+    NSMutableArray *clientArray;
+    NSMutableArray *oneArray;//字母数组
+    NSMutableArray *twoArray;//客户资料
+    NSMutableArray *arrMut;
+    int page;
+    int dex;
+    
+    
+    
+    BOOL  orAll;
+}
+
+@end
+
+@implementation MassEmailController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    [super viewDidLoad];
+//     page=1;
+    sendArray=[[NSMutableArray alloc]init];
+    clientArray=[[NSMutableArray alloc]init];
+    arrMut=[[NSMutableArray alloc]init];
+    oneArray =[[NSMutableArray alloc]init];
+    twoArray=[[NSMutableArray alloc]init];
+    table = [[UITableView alloc]initWithFrame:CGRectMake(0, 95, KScreenWidth, KScreenHeight-155)];
+    table.delegate=self;
+    table.dataSource=self;
+    [self.view addSubview:table];
+    table.sectionIndexBackgroundColor = [UIColor clearColor];
+    table.sectionIndexColor = [UIColor blackColor];
+    UIBarButtonItem *right = [[UIBarButtonItem alloc]initWithTitle:@"下一步" style:UIBarButtonItemStyleDone target:self action:@selector(sendMessage)];
+    self.navigationItem.rightBarButtonItem = right;
+    
+    UIView *view = [[UIView alloc]init];
+    table .tableFooterView = view;
+   
+//    table.footer = [MJRefreshBackStateFooter footerWithRefreshingBlock:^{
+//     page ++;
+//     [self loadSendDetai];
+//        
+//    }];
+
+//    table.header=self.header;
+     dex=1;
+    page = 1;
+    [self loadSendDetai];
+
+}
+//- (void)loadNewData{
+//    [super loadNewData];
+//     self.selectImageView.image=[UIImage imageNamed:@"2_noSelect"];
+//    [table.footer resetNoMoreData];
+//    page = 1;
+//    
+//    [self loadSendDetai];
+//}
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [sendArray removeAllObjects];
+}
+-(void)loadSendDetai{
+   
+    NSDictionary *dic = @{@"shopId":GLOBARMANAGER.userConfig.shopId,@"pageIndex":@(page),@"pageSize":@(1000)};
+    
+    [HttpRequest getWebData:[GLOBARMANAGER AppKeyTokenDic:dic] path:CommonList method:@"GET" success:^(id object) {
+        if (object) {
+            
+            if ([[object objectForKey:@"success"]intValue] == 1) {
+                
+                if(page == 1){
+                    [arrMut removeAllObjects];
+                    [oneArray removeAllObjects];
+                    [twoArray removeAllObjects];
+
+                    // [table .footer resetNoMoreData];
+                    [arrMut addObjectsFromArray:[object objectForKey:@"result"]];
+                }else{
+                    [arrMut addObjectsFromArray:[object objectForKey:@"result"]];
+                }
+                if(arrMut.count > 0){
+                    [table reloadData];
+                }
+//                NSArray *sortedArray = [arrMut sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+//                    //这里的代码可以参照上面compare:默认的排序方法，也可以把自定义的方法写在这里，给对象排序
+//                    NSComparisonResult result = [obj1[@"spell"] compare:obj2[@"spell"]];
+//                    return result;
+//                }];
+                NSMutableArray *topArray = [NSMutableArray new];
+                for(NSDictionary *dic in arrMut){
+                    
+                    [topArray addObject:dic[@"spell"]];
+                }
+                
+                
+                //字母排序的去重
+                NSMutableArray *TwoArray = [NSMutableArray new];
+                for (int i = 0 ; i< [topArray count]; i ++) {
+                    if ( [TwoArray containsObject:topArray[i]]==NO) {
+                        
+                        [TwoArray addObject:topArray[i]];
+                    }
+                }
+                oneArray=TwoArray;//一维数组已经确定。
+                
+                
+                if (oneArray.count!=0) {
+                    twoArray = [self generateTwoArray:arrMut];
+                }
+                
+                [table reloadData];
+            }
+            
+        }
+        if(page == 1 && arrMut.count == 0){
+            
+        }
+        if(page != 1){
+            NSArray *array = [object objectForKey:@"result"];
+            if(array.count < 10){
+                [table.footer endRefreshingWithNoMoreData];
+                
+            }else{
+                [table.footer endRefreshing];
+            }
+        }else{
+            [table.header endRefreshing];
+        }
+        
+        
+    } fail:^(NSString *msg) {
+        
+    }];
+    
+}
+- (NSMutableArray *)generateTwoArray:(NSArray *)array{
+    
+//    NSArray *sortedArray = [array sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+//        //这里的代码可以参照上面compare:默认的排序方法，也可以把自定义的方法写在这里，给对象排序
+//        NSComparisonResult result = [obj1[@"spell"] compare:obj2[@"spell"]];
+//        return result;
+//    }];
+    
+    NSMutableArray *topArray = [NSMutableArray new];
+    for(NSDictionary *dic in array){
+        
+        [topArray addObject:dic[@"spell"]];
+    }
+    
+    
+    NSSet *set = [NSSet setWithArray:topArray];
+    
+    
+    NSMutableArray *TwoArray = [NSMutableArray new];
+    for (int i  = 0; i < set.count; i ++) {
+        [TwoArray addObject:[NSMutableArray new]];
+    }
+    
+    
+    NSString *spell = array[0][@"spell"];
+    
+    int lie = 0;
+    
+    for (int i = 0; i < array.count; i ++) {
+        
+        NSDictionary *clientDic = array[i];
+        Client *client=[[Client alloc]init];
+        [client getClient:clientDic];
+        
+        
+        if([array[i][@"spell"] isEqualToString:spell]){
+            NSMutableArray *array = TwoArray[lie];
+            [array addObject:client];
+            
+        }else{
+            
+            lie++;
+            spell = array[i][@"spell"];
+            NSMutableArray *array = TwoArray[lie];
+            [array addObject:client];
+        }
+        
+    }
+    return TwoArray;
+}
+
+//点击下一步的按钮，执行的方法
+-(void)sendMessage{
+    if (dex==1) {
+        if (sendArray.count!=0) {
+        PostEmailController  *qc = [[PostEmailController alloc]initWithNibName:@"PostEmailController" bundle:nil];
+        qc.title=@"群发活动消息";
+            if (sendArray.count==arrMut.count) {
+                sendArray=[[NSMutableArray alloc]init];
+            }
+        qc.cusArray=sendArray;
+        [self.navigationController pushViewController:qc animated:YES];
+        }
+        else{
+             [SVProgressHUD showErrorWithStatus:@"请选择至少一个客户!"];
+        }
+
+    }else{
+        dex=1;
+        PostEmailController  *qc = [[PostEmailController alloc]initWithNibName:@"PostEmailController" bundle:nil];
+        qc.title=@"群发活动消息";
+        sendArray=[[NSMutableArray alloc]init];
+        qc.cusArray=sendArray;
+        [self.navigationController pushViewController:qc animated:YES];
+    }
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    static NSString *CellIdentifier = @"MassEmailTableCell";
+    MassEmailTableCell*cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (!cell) {
+        NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"MassEmailTableCell" owner:self options:nil];
+        cell = [nib objectAtIndex:0];
+    }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    Client *client=[[Client alloc]init];
+    client=[twoArray [indexPath.section] objectAtIndex:indexPath.row];
+    
+    cell.massButton.tag=indexPath.section*1000+indexPath.row;
+     NSURL *url=[NSURL URLWithString:client.icon];
+
+    [ cell.massHeaderImageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"photo-@2x.png"]];
+    cell.massHeaderImageView.layer.cornerRadius = cell.massHeaderImageView.frame.size.width /2;
+    
+    cell.massHeaderImageView.clipsToBounds = YES;
+    
+    cell.massHeaderImageView.layer.borderWidth = 0.0f;
+    if (client.remark.length==0) {
+        cell.massNameLabel.text=client.nickName;
+    }else{
+         cell.massNameLabel.text=client.remark;
+    }
+//  cell.massNameLabel.text=client.nickName;
+    cell.massPhoneLabel.text=client.mobile;
+    if (client.select) {
+        cell.lateImageView.image=[UIImage imageNamed:@"2_select"];
+        
+    }else{
+        cell.lateImageView.image=[UIImage imageNamed:@"2_noSelect"];
+    }
+    [cell.massButton addTarget:self action:@selector(orSelect:) forControlEvents:UIControlEventTouchUpInside];
+    
+    return cell ;
+}
+-(void)orSelect:(UIButton *)btn{
+    dex=1;
+    orAll=NO;
+    self.selectImageView.image=[UIImage imageNamed:@"2_noSelect"];
+    Client *client=[[Client alloc]init];
+    client=[[twoArray objectAtIndex:btn.tag/1000] objectAtIndex:btn.tag%1000];
+    
+        if (client.select) {
+        client.select=NO;
+            [table reloadData];
+//        [btn setImage:[UIImage imageNamed:@"2_noSelect"] forState:UIControlStateNormal];
+        cellButton=NO;
+        [sendArray removeObject:client];
+        NSLog(@"-------------------%ld",sendArray.count);
+        
+    }else{
+        client.select=YES;
+        
+        [sendArray addObject:client];
+        NSLog(@"===============%ld",sendArray.count);
+    
+                if (sendArray.count==arrMut.count) {
+            self.selectImageView.image=[UIImage imageNamed:@"2_select"];
+        }else{
+             self.selectImageView.image=[UIImage imageNamed:@"2_noSelect"];
+        }
+        [table reloadData];
+
+//        [btn setImage:[UIImage imageNamed:@"2_select"] forState:UIControlStateNormal];
+        cellButton=YES;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 60;
+}
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    
+    return oneArray.count;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+
+   return [(NSMutableArray *)[twoArray objectAtIndex:section] count];
+}
+-(NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView{
+    return oneArray;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 20;
+}
+- (NSInteger) tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
+{
+    NSString *key = [oneArray objectAtIndex:index];
+    if (key == UITableViewIndexSearch) {
+        [tableView setContentOffset:CGPointZero animated:NO];
+        return NSNotFound;
+    }
+    
+    return index;
+}
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+    bgView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(13, 0, 250, 20)];
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.textColor = [UIColor blackColor];
+    titleLabel.font = [UIFont systemFontOfSize:15];
+    NSString *key = [oneArray objectAtIndex:section];
+    titleLabel.text = key;
+    [bgView addSubview:titleLabel];
+    return bgView;
+}
+
+- (IBAction)allSelectAction:(id)sender {
+    
+    if (orAll) {
+        dex=1;
+        
+        self.selectImageView.image=[UIImage imageNamed:@"2_noSelect"];
+        sendArray=[[NSMutableArray alloc]init];
+        for(NSArray *arr in twoArray){
+            for(Client *kehu in arr){
+                kehu.select = NO;
+            }
+        }
+        
+       [sendArray removeAllObjects];
+        
+        NSLog(@"%lu",(unsigned long)sendArray.count);
+        
+         orAll=NO;
+        [table reloadData];
+        
+    }else{
+    
+    dex=2;
+    self.selectImageView.image=[UIImage imageNamed:@"2_select"];
+    
+    sendArray=[[NSMutableArray alloc]init];
+    for(NSArray *arr in twoArray){
+        for(Client *kehu in arr){
+            kehu.select = YES;
+        }
+    }
+    //搜罗出所有被选中的用户对象
+    //  NSMutableArray *clientArray = [NSMutableArray new];
+    for(NSArray *arr in twoArray){
+        for(Client *kehu in arr){
+            kehu.select = YES;
+            
+            if(kehu.select){
+                [sendArray addObject:kehu];
+            }
+        }
+    }
+        
+    NSLog(@"%ld",(unsigned long)sendArray.count);
+    orAll=YES;
+    [table reloadData];
+    }
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    orAll=NO;
+    self.selectImageView.image=[UIImage imageNamed:@"2_noSelect"];
+    sendArray=[[NSMutableArray alloc]init];
+    for(NSArray *arr in twoArray){
+        for(Client *kehu in arr){
+            kehu.select = NO;
+        }
+    }
+     NSLog(@"%ld",(unsigned long)sendArray.count);
+    [table reloadData];
+  
+}
+- (IBAction)button0:(id)sender{
+    NSLog(@"0");
+}
+- (IBAction)button1:(id)sender{
+      NSLog(@"1");
+}
+
+- (IBAction)button2:(id)sender{
+      NSLog(@"2");
+}
+- (IBAction)button3:(id)sender{
+      NSLog(@"3");
+}
+
+- (IBAction)button4:(id)sender{
+      NSLog(@"4");
+}
+- (IBAction)button5:(id)sender{
+      NSLog(@"5");
+}
+
+- (IBAction)button6:(id)sender{
+      NSLog(@"6");
+}
+
+- (IBAction)button7:(id)sender{
+      NSLog(@"7");
+}
+
+- (IBAction)button8:(id)sender{
+      NSLog(@"8");
+}
+
+
+@end

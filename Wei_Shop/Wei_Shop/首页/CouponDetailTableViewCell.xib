@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9527.1" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9525.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="45" id="KGk-i7-Jjw" customClass="CouponDetailTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="45"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="优惠券码" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gql-b5-ejt">
+                        <rect key="frame" x="14" y="11" width="70" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="1g8-s5-YQj"/>
+                            <constraint firstAttribute="width" constant="70" id="abk-pZ-BfJ"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="微美微保湿补水" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vQN-2M-5Nv">
+                        <rect key="frame" x="228" y="12" width="84" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="42" id="bMj-eI-xxd"/>
+                            <constraint firstAttribute="height" constant="21" id="sGY-BT-pJm"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="gql-b5-ejt" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="14" id="4zX-R4-cXN"/>
+                    <constraint firstItem="vQN-2M-5Nv" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="653-zI-2XC"/>
+                    <constraint firstItem="gql-b5-ejt" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Gft-PR-xW7"/>
+                    <constraint firstAttribute="trailing" secondItem="vQN-2M-5Nv" secondAttribute="trailing" constant="8" id="UGJ-Q2-CFB"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="detailLabel" destination="vQN-2M-5Nv" id="fWd-So-Qsn"/>
+                <outlet property="mainLabel" destination="gql-b5-ejt" id="Y3V-Av-GpR"/>
+            </connections>
+            <point key="canvasLocation" x="265" y="232.5"/>
+        </tableViewCell>
+    </objects>
+</document>

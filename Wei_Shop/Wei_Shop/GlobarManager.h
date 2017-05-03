@@ -1,0 +1,81 @@
+//
+//  GlobarManager.h
+//  Wei_Shop
+//
+//  Created by Geniune on 15/11/3.
+//  Copyright © 2015年 cjl. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "UserConstant.h"
+#import "DataBaseManager.h"
+
+typedef void (^pKeyGettedBlock) (NSString *obj);
+
+#define GLOBARMANAGER [GlobarManager shareInstance]
+
+@interface GlobarManager : NSObject{
+    
+    NSTimer *timer;
+}
+#pragma mark - 拉取未读消息
+- (void)RequestMessageList;
+
++ (GlobarManager *)shareInstance;
++ (void)OpenFMDataBase;
+
+- (void)ResigterDevice;
+- (NSString *)dateString;
++ (NSString *)NSdateToString;
+
+- (NSMutableDictionary *)AppKeyDic:(NSDictionary *)dic;
+- (NSMutableDictionary *)AppKeyTokenDic:(NSDictionary *)dic;
+
+@property (nonatomic ,assign) NSInteger unReadCount;
+@property (nonatomic ,assign) NSInteger beforeUnread;
+@property (nonatomic ,strong) NSMutableArray *unreadMessageList;
+
+@property (nonatomic, strong) UserConstant  *userConfig;
+
+@property (nonatomic, assign) BOOL deviceResigted;
+@property (nonatomic, strong) NSString *publicKey;
+
+@property (copy,nonatomic) pKeyGettedBlock pKeyblock;
+@property (nonatomic, strong) NSString *userImg;
+
+- (void)getunReadMessageListCompleted:(void (^)(id))success;
+
+- (void)requestPublicKeyCallback:(pKeyGettedBlock)callBack;
+
+#pragma mark - 登录接口
+- (void)loginHTTPAccount:(NSString *)account password:(NSString *)password Success:(void (^)(id))success
+                 failure:(void (^)(NSString *))failure;
+
+
+//判断用户设置中是否禁用相册
+- (BOOL)checkPhotoEnable;
+//判断用户设置中是否禁用相机
+- (BOOL)checkCameraEnable;
+
+//判断是不是电话号码
+- (BOOL)isPhoneNumber:(NSString*)text;
+
+- (CGSize)sizeText:(NSString*)text
+              font:(UIFont*)font
+        limitWidth:(float)width;
+
+- (CGSize)sizeText:(NSString*)text
+              font:(UIFont*)font
+       limitHeight:(float)height;
+/**
+ *  返回文字的size
+ *
+ *  @param text 内容
+ *  @param font 字体
+ *
+ *  @return size
+ */
+- (CGSize)sizeText:(NSString*)text font:(UIFont*)font;
+
+- (CGSize)sizeText:(NSString*)text font:(UIFont*)font constrainedToSize:(CGSize)size;
+@end

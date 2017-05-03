@@ -1,0 +1,25 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "5fa293cd-76f9-3044-a292-04290a0742b0++7549",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+    "5fa293cd-76f9-3044-a292-04290a0742b0++7549" : {
+
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "5fa293cd-76f9-3044-a292-04290a0742b0++7549" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "B0014CC4-5C0D-4288-8C41-EFC15112F10F",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "5fa293cd-76f9-3044-a292-04290a0742b0++7549" : "Wei_Shop"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Wei_Shop",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Wei_Shop.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/192.168.1.28\/svn\/iwellfie",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "5fa293cd-76f9-3044-a292-04290a0742b0++7549"
+    }
+  ]
+}

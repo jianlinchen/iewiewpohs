@@ -1,0 +1,52 @@
+//
+//  AgremmentController.m
+//  Wei_Shop
+//
+//  Created by dzr on 15/12/10.
+//  Copyright © 2015年 cjl. All rights reserved.
+//
+
+#import "AgremmentController.h"
+
+@interface AgremmentController ()
+
+@end
+
+@implementation AgremmentController
+
+- (void)viewDidLoad {
+    self.agreeWebView.delegate = self;
+    
+    [self.agreeWebView setScalesPageToFit:YES];
+    self.agreeWebView.backgroundColor = [UIColor whiteColor];
+    self.agreeWebView.opaque = NO;
+    
+    NSURLRequest *request =[NSURLRequest requestWithURL:[NSURL URLWithString:self.URL]];
+    [self.agreeWebView loadRequest:request];
+    
+}
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(nullable NSError *)error{
+    
+    [SVProgressHUD showErrorWithStatus:@"加载出错！"];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+- (IBAction)dissVC:(id)sender {
+     [self dismissViewControllerAnimated:NO completion:nil];
+}
+@end

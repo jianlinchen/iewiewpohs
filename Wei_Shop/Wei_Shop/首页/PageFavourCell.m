@@ -1,0 +1,38 @@
+//
+//  PageFavourCell.m
+//  Wei_Shop
+//
+//  Created by dzr on 15/12/7.
+//  Copyright © 2015年 cjl. All rights reserved.
+//
+
+#import "PageFavourCell.h"
+
+@implementation PageFavourCell
+
+- (void)awakeFromNib {
+    // Initialization code
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+-(void)setFavourable:(Favourable *)favourable{
+    if ([favourable.statusName isEqualToString:@"审核通过"]) {
+        self.examzeImageView.image=[UIImage imageNamed:@"1_blueFav.png"];
+        
+    }else if ([favourable.statusName isEqualToString:@"审核不通过"]||[favourable.statusName isEqualToString:@"违规下架"]||[favourable.statusName isEqualToString:@"下架"]){
+          self.examzeImageView.image=[UIImage imageNamed:@"1_redFav.png"];
+    }
+    self.coupleLabel.text=favourable.name;
+    self.singleCouLabel.text=favourable.title;
+    self.examzeLabel.text=favourable.statusName;
+    
+    self.timeLabel.text=[NSString stringWithFormat:@"使用期限:%@至%@",favourable.startTime,favourable.endTime];
+    self.priceLabel.text=favourable.feeValue;
+    
+   }
+
+@end

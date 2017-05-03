@@ -1,0 +1,24 @@
+//
+//  Coment.m
+//  Wei_Shop
+//
+//  Created by dzr on 15/12/2.
+//  Copyright © 2015年 cjl. All rights reserved.
+//
+
+#import "Coment.h"
+
+@implementation Coment
+-(void)getComent:(NSDictionary *)p{
+    Dictionary2Object(p, @"customerId", self.customerId);
+    Dictionary2Object(p, @"userId", self.userId);
+    Dictionary2Object(p, @"userName", self.userName);
+    Dictionary2Object(p, @"nickName", self.nickName);
+    Dictionary2Object(p, @"remark", self.remark);
+    Dictionary2Object(p, @"spell", self.spell);
+    Dictionary2Object(p, @"icon", self.icon);
+    Dictionary2Object(p, @"mobile", self.mobile);
+    Dictionary2Object(p, @"remark", self.remark);
+}
+
+@end

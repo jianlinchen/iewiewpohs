@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9060"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MassEmailController">
+            <connections>
+                <outlet property="topView" destination="dtb-vI-FeZ" id="dKu-JU-4al"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dtb-vI-FeZ">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tTA-cV-On6">
+                            <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                            <animations/>
+                            <color key="backgroundColor" red="0.70066646107456132" green="0.68686609100877194" blue="0.68614651864035081" alpha="0.38048986486486486" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="p0J-uQ-lvW"/>
+                            </constraints>
+                            <variation key="default">
+                                <mask key="constraints">
+                                    <exclude reference="p0J-uQ-lvW"/>
+                                </mask>
+                            </variation>
+                            <variation key="heightClass=regular-widthClass=compact">
+                                <mask key="constraints">
+                                    <include reference="p0J-uQ-lvW"/>
+                                </mask>
+                            </variation>
+                        </view>
+                    </subviews>
+                    <animations/>
+                    <color key="backgroundColor" red="0.96470588235294119" green="0.96470588235294119" blue="0.96470588235294119" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="103" id="HRp-0P-TQJ"/>
+                        <constraint firstAttribute="trailing" secondItem="tTA-cV-On6" secondAttribute="trailing" id="iun-Gh-ucH"/>
+                        <constraint firstAttribute="bottom" secondItem="tTA-cV-On6" secondAttribute="bottom" constant="1" id="kgI-ur-Vy1"/>
+                        <constraint firstItem="tTA-cV-On6" firstAttribute="leading" secondItem="dtb-vI-FeZ" secondAttribute="leading" id="vTH-UA-pWn"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="subviews">
+                            <exclude reference="tTA-cV-On6"/>
+                        </mask>
+                        <mask key="constraints">
+                            <exclude reference="HRp-0P-TQJ"/>
+                            <exclude reference="iun-Gh-ucH"/>
+                            <exclude reference="kgI-ur-Vy1"/>
+                            <exclude reference="vTH-UA-pWn"/>
+                        </mask>
+                    </variation>
+                    <variation key="heightClass=regular-widthClass=compact">
+                        <mask key="subviews">
+                            <include reference="tTA-cV-On6"/>
+                        </mask>
+                        <mask key="constraints">
+                            <include reference="HRp-0P-TQJ"/>
+                            <include reference="iun-Gh-ucH"/>
+                            <include reference="kgI-ur-Vy1"/>
+                            <include reference="vTH-UA-pWn"/>
+                        </mask>
+                    </variation>
+                </view>
+            </subviews>
+            <animations/>
+            <constraints>
+                <constraint firstItem="dtb-vI-FeZ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="9Yc-vq-YmA"/>
+                <constraint firstItem="dtb-vI-FeZ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="VtE-p0-reE"/>
+                <constraint firstAttribute="trailing" secondItem="dtb-vI-FeZ" secondAttribute="trailing" id="lMe-fe-Pgg"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+            <variation key="default">
+                <mask key="subviews">
+                    <exclude reference="dtb-vI-FeZ"/>
+                </mask>
+                <mask key="constraints">
+                    <exclude reference="9Yc-vq-YmA"/>
+                    <exclude reference="VtE-p0-reE"/>
+                    <exclude reference="lMe-fe-Pgg"/>
+                </mask>
+            </variation>
+            <variation key="heightClass=regular-widthClass=compact">
+                <mask key="subviews">
+                    <include reference="dtb-vI-FeZ"/>
+                </mask>
+                <mask key="constraints">
+                    <include reference="9Yc-vq-YmA"/>
+                    <include reference="VtE-p0-reE"/>
+                    <include reference="lMe-fe-Pgg"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="382" y="66"/>
+        </view>
+    </objects>
+</document>

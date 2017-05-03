@@ -1,0 +1,351 @@
+//
+//  HomeViewController.m
+//  Wei_Shop
+//
+//  Created by dzr on 15/10/29.
+//  Copyright (c) 2015年 cjl. All rights reserved.
+//
+
+#import "HomeViewController.h"
+#import "XLCycleScrollView.h"
+#import "BarnchGetCouponViewController.h"
+#import "AppointmentViewController.h"
+#import "UIImageView+WebCache.h"
+#import "ScanReaderViewController.h"
+#import "UserRuleViewController.h"
+#import "MessageListViewController.h"
+#import "Demo2ViewController.h"
+#import "CustomView.h"//测试
+#import "FavourViewController.h"
+#import "ComentController.h"
+#import "MBProgressHUD.h"
+@interface HomeViewController ()<XLCycleScrollViewDatasource,XLCycleScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,UITableViewDataSource>{
+    UIScrollView *scrollView;
+    NSString *strban;
+    NSString *urlurl;
+    NSString *uu;//获取当前版本
+//    UILabel *redPinLabel;
+    
+}
+
+@property (strong, nonatomic) XLCycleScrollView *bannerView;
+@property (strong, nonatomic) NSMutableArray *bannerData;
+@property (strong, nonatomic) IBOutlet UIView *buttonsView;
+@property (weak, nonatomic) IBOutlet UILabel *branchLabel;
+
+@end
+
+@implementation HomeViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.unReadLabel.layer.masksToBounds = YES;
+    self.unReadLabel.layer.cornerRadius = 5.0f;
+    
+    
+    self.redPinLabel.layer.masksToBounds = YES;
+    self.redPinLabel.layer.cornerRadius = 5.0f;
+
+    self.bannerData = [[NSMutableArray alloc]init];
+    
+    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, -20, APP_W, APP_H)];
+    scrollView.backgroundColor = [UIColor whiteColor];
+    scrollView.contentSize = CGSizeMake(APP_W, 650);
+    
+    UIView *mainView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, APP_W, 650)];
+    
+    self.bannerView = [[XLCycleScrollView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 200)];
+    self.bannerView.datasource = self;
+    self.bannerView.delegate = self;
+    self.buttonsView.frame = CGRectMake(0, 200, APP_W, 450);
+    
+//  UIImageView *addImageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 175, KScreenWidth,25 )];
+//  addImageView.image=[UIImage imageNamed:@"round"];
+    
+    [mainView addSubview:self.bannerView];
+//  [mainView addSubview:addImageView];
+    
+    
+    [mainView addSubview:self.buttonsView];
+    scrollView.header = self.header;
+    [scrollView addSubview:mainView];
+    [self.view addSubview:scrollView];
+// [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+}
+
+
+-(void)LJAction{
+    if(!GLOBARMANAGER.userConfig.shopId){
+        self.tabBarController.tabBar.window.userInteractionEnabled = NO;
+        NSString *account = [[NSUserDefaults standardUserDefaults] objectForKey:Account];
+        NSString *passWord = [[NSUserDefaults standardUserDefaults] objectForKey:Password];
+        [GLOBARMANAGER requestPublicKeyCallback:^(NSString *obj) {
+            [GLOBARMANAGER loginHTTPAccount:account password:passWord Success:^(id obj) {
+                self.branchLabel.text = GLOBARMANAGER.userConfig.shopName;
+                self.tabBarController.tabBar.window.userInteractionEnabled = YES;
+                [self loadBannerDataSuccess:^(id object) {
+                [self.bannerView reloadData];
+                    [self ShopAppoit];
+               
+            }];
+        } failure:^(NSString *msg) {
+                
+            self.tabBarController.tabBar.window.userInteractionEnabled = YES;
+//            [SVProgressHUD showErrorWithStatus:msg];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"LoginSuccess" object:nil];
+         }];
+        }];
+    }else{
+         [self ShopAppoit];
+
+        self.branchLabel.text = GLOBARMANAGER.userConfig.shopName;
+        [self loadBannerDataSuccess:^(id object) {
+            [self.bannerView reloadData];
+            
+        }];
+    }
+
+    
+}
+- (void)loadNewData{
+    [super loadNewData];
+     [self ShopAppoit];
+//    [self. bannerData removeAllObjects];
+    [self loadBannerDataSuccess:^(id object) {
+        [self.bannerView reloadData];
+    }];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+//    [self. bannerData removeAllObjects];
+
+    if(GLOBARMANAGER.unReadCount == 0){
+        self.unReadLabel.hidden = YES;
+    }else{
+        self.unReadLabel.hidden = NO;
+//      self.unReadLabel.text = [NSString stringWithFormat:@"%ld",(long)GLOBARMANAGER.unReadCount];
+        self.unReadLabel.text = @"";
+    }
+    [self LJAction];
+       
+    [self.bannerView startAutoScroll:3.0f];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector (newMessage:) name:@"UnreadMessage" object:nil];
+    
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
+ 
+}
+-(void)ShopAppoit{
+    
+//    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:
+//                         GLOBARMANAGER.userConfig.shopId,@"shopId",
+//                         
+//                         nil];
+    
+    NSDictionary *dic = @{@"shopId":GLOBARMANAGER.userConfig.shopId};
+    
+    
+    
+    [HttpRequest getWebData:[GLOBARMANAGER AppKeyTokenDic:dic] path:ShopAppointment method:@"GET" success:^(id object) {
+            if([[object objectForKey:@"success"] intValue] == 1){
+                
+                NSString *str=[NSString stringWithFormat:@"%@",object[@"result"][@"count"]];
+                
+                if ([str isEqualToString:@"0"]) {
+                    self.redPinLabel.hidden=YES;
+                }else{
+                     self.redPinLabel.hidden=NO;
+                }
+//                NSLog(@"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++%@",object);
+            
+                   }
+    } fail:^(NSString *msg) {
+        NSLog(@"错误");
+    }];
+
+}
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UnreadMessage" object:nil];
+    [self.navigationController setNavigationBarHidden:NO animated:NO];
+//    [self.bannerView stopAutoScroll];
+    
+}
+
+- (void)newMessage:(id)sender{
+    
+    if(GLOBARMANAGER.unReadCount == 0){
+        self.unReadLabel.hidden = YES;
+    }else{
+        self.unReadLabel.hidden = NO;
+//      self.unReadLabel.text = [NSString stringWithFormat:@"%ld",(long)GLOBARMANAGER.unReadCount];
+        self.unReadLabel.text = @"";
+    }
+}
+
+#pragma mark - XLCycleScrollViewDelegate
+- (NSInteger)numberOfPages{
+    
+    if(self.bannerData.count == 0||self.bannerData.count == 1){
+        self.bannerView.scrollView.scrollEnabled = NO;
+        [self.bannerView stopAutoScroll];
+        return 1;
+    }else{
+        self.bannerView.scrollView.scrollEnabled = YES;
+        [self.bannerView startAutoScroll:3.0f];
+        return self.bannerData.count;
+    }
+}
+- (UIView *)pageAtIndex:(NSInteger)index{
+    
+    if(!self.bannerData || self.bannerData.count == 0){
+        return [[UIView alloc]init];
+    }
+    UIImageView *imageV = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, APP_W, 200)];
+    NSDictionary *dic = [self.bannerData objectAtIndex:index];
+    imageV.image = [UIImage imageNamed:@"确认按钮矩形"];
+        
+    [imageV setImageWithURL:[NSURL URLWithString:dic[@"imgUrl"]] placeholderImage:[UIImage imageNamed:@"确认按钮矩形"]];
+    
+    return imageV;
+}
+
+- (void)didClickPage:(XLCycleScrollView *)csView atIndex:(NSInteger)index{
+
+//    if (self.bannerData.count!=0) {
+         NSDictionary *dic = self.bannerData[index];
+    
+    if(dic[@"detailUrl"] && ![dic[@"detailUrl"]isEqualToString:@""]){
+        UserRuleViewController *VC = [[UserRuleViewController alloc]init];
+        VC.title =dic[@"advertName"];
+        VC.URL = dic[@"detailUrl"];
+        VC.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:VC animated:YES];
+    }
+
+//       }
+   }
+
+#pragma mark - UITableViewDelegate
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    
+    return 0;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return nil;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - HTTP请求
+- (void)loadBannerDataSuccess:(void(^)(id object))success{
+   
+    NSDictionary *dic = @{@"cityId":GLOBARMANAGER.userConfig.cityId,@"advertNo":@"A1"};
+    
+    NSMutableDictionary *requestDic = [GLOBARMANAGER AppKeyDic:dic];
+//    [self.bannerData removeAllObjects];
+    
+    [HttpRequest getWebData:requestDic path:AdvertList method:@"GET" success:^(id object) {
+        if(object && [object isKindOfClass:[NSDictionary class]]){
+            
+            if([[object objectForKey:@"success"] intValue] == 1){
+                 [self. bannerData removeAllObjects];
+                [self.bannerData addObjectsFromArray:[object objectForKey:@"result"]];
+                if(success){
+                    success(self.bannerData);
+                }
+            }
+        }
+        [scrollView.header endRefreshing];
+    } fail:^(NSString *msg) {
+        [scrollView.header endRefreshing];
+        
+    }];
+}
+
+#pragma mark - Button点击时间处理
+- (IBAction)validateCoupon:(UIButton *)sender {
+    switch (sender.tag) {
+        case 101://商户验券
+            [self btn101];
+            break;
+        case 102://预约信息
+            [self btn102];
+            break;
+        case 103://在线咨询
+            [self btn103];
+            break;
+        case 104://门店管理
+            [self btn104];
+            break;
+        case 105://门店优惠
+              [self btn105];
+            break;
+        case 106://门店评价
+            [self btn106];
+            break;
+        case 107://扫一扫
+            [self btn107];
+            break;
+        default:
+            break;
+    }
+    
+}
+//-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+//
+//{
+//    
+//    if (buttonIndex ==1) {
+//        
+//        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlurl]];
+//        NSLog(@"!2");
+//    }
+//}
+
+- (void)btn101{
+   BarnchGetCouponViewController *VC = [[BarnchGetCouponViewController alloc]initWithNibName:@"BarnchGetCouponViewController" bundle:nil];
+    VC.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:VC animated:YES];
+}
+- (void)btn102{
+    AppointmentViewController *VC = [[AppointmentViewController alloc]init];
+    VC.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:VC animated:YES];
+}
+- (void)btn103{
+    MessageListViewController *VC = [[MessageListViewController alloc]initWithNibName:@"MessageListViewController" bundle:nil];
+    VC.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:VC animated:YES];
+}
+- (void)btn104{
+    Demo2ViewController *VC = [[Demo2ViewController alloc]initWithNibName:@"Demo2ViewController" bundle:nil];
+    VC.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:VC animated:YES];
+}
+- (void)btn105{
+    FavourViewController *VC = [[FavourViewController alloc]initWithNibName:@"FavourViewController" bundle:nil];
+    VC.title=@"门店优惠";
+    VC.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:VC animated:YES];
+}
+- (void)btn106{
+    ComentController *VC = [[ComentController alloc]initWithNibName:@"ComentController" bundle:nil];
+    VC.title=@"评价";
+    VC.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:VC animated:YES];
+}
+- (void)btn107{
+    
+    if([GLOBARMANAGER checkCameraEnable]){
+        ScanReaderViewController *VC = [[ScanReaderViewController alloc]initWithNibName:@"ScanReaderViewController" bundle:nil];
+        VC.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:VC animated:YES];
+    }
+}
+
+@end

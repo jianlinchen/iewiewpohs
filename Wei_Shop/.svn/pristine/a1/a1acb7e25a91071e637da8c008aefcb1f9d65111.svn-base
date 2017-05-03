@@ -1,0 +1,25 @@
+//
+//  Coment.h
+//  Wei_Shop
+//
+//  Created by dzr on 15/12/2.
+//  Copyright © 2015年 cjl. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface Coment : NSObject
+@property (nonatomic, strong) NSString *customerId;
+@property (nonatomic, strong) NSString *userId;
+@property (nonatomic, strong) NSString *userName;
+@property (nonatomic, strong) NSString *nickName;
+@property (nonatomic,strong)  NSString *remark;
+@property (nonatomic,strong)  NSString *spell;
+@property (nonatomic,strong)  NSString *icon;
+@property (nonatomic,strong)  NSString *mobile;
+@property(nonatomic,assign) int select;
+
+@property(nonatomic,strong)NSString *ttt ;
+-(void)getComent:(NSDictionary *)p;
+
+@end

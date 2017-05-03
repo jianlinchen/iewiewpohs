@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FeedBackController">
+            <connections>
+                <outlet property="feedTextView" destination="W1Y-yU-HVW" id="LU6-wQ-9JC"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="4_Edit-box.png" translatesAutoresizingMaskIntoConstraints="NO" id="kuo-sz-8Th">
+                    <rect key="frame" x="8" y="27" width="576" height="149"/>
+                    <animations/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3kf-Om-xy7">
+                    <rect key="frame" x="200" y="184" width="97" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <animations/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.60092002470000005" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="W1Y-yU-HVW">
+                    <rect key="frame" x="13" y="32" width="564" height="134"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="134" id="vxb-ju-Kf9">
+                            <variation key="heightClass=regular-widthClass=compact" constant="125"/>
+                        </constraint>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="W1Y-yU-HVW" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="1dc-iE-B0o"/>
+                <constraint firstAttribute="trailing" secondItem="kuo-sz-8Th" secondAttribute="trailing" constant="8" id="8nz-qk-KcT"/>
+                <constraint firstAttribute="trailing" secondItem="W1Y-yU-HVW" secondAttribute="trailing" constant="10" id="9wJ-Sn-ACU"/>
+                <constraint firstItem="W1Y-yU-HVW" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="32" id="bnE-qC-Poa"/>
+                <constraint firstItem="kuo-sz-8Th" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="27" id="lz5-JK-zVt"/>
+                <constraint firstItem="3kf-Om-xy7" firstAttribute="top" secondItem="W1Y-yU-HVW" secondAttribute="bottom" constant="18" id="sH8-mQ-T91"/>
+                <constraint firstItem="3kf-Om-xy7" firstAttribute="top" secondItem="kuo-sz-8Th" secondAttribute="bottom" constant="8" symbolic="YES" id="wYp-L3-91p"/>
+                <constraint firstItem="kuo-sz-8Th" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="yEY-df-YHm"/>
+            </constraints>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="yEY-df-YHm"/>
+                </mask>
+            </variation>
+            <variation key="heightClass=regular-widthClass=compact">
+                <mask key="constraints">
+                    <include reference="yEY-df-YHm"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="256" y="228"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="4_Edit-box.png" width="490" height="300"/>
+    </resources>
+</document>

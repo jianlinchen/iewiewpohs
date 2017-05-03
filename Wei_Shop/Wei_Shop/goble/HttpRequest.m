@@ -1,0 +1,344 @@
+//
+//  HttpRequest.m
+//  hk_money
+//
+//  Created by vin on 14-7-21.
+//  Copyright (c) 2014年 LianZhan. All rights reserved.
+//
+
+#import "HttpRequest.h"
+#import "AFHTTPRequestOperation.h"
+#import "AFHTTPClient.h"
+#import "SBJsonParser.h"
+#import "MBProgressHUD.h"
+#import "Reachability.h"
+#import "API.h"
+#import "Constant.h"
+
+@implementation HttpRequest
+
+//+(HttpRequest*)shareInstance{
+//    static  HttpRequest *httpRequest=nil;
+//    if (httpRequest==nil) {
+//        httpRequest=[[HttpRequest alloc]init];
+//    }
+//    return httpRequest;
+//}
+
+
+
++(void)getWebData:(NSDictionary *)params path:(NSString *)path method:(NSString *)method success:(void(^)(id object))success fail:(void(^)(NSString* msg))fail{
+    NSLog(@"%@",params);
+//    if (params == nil || params.count <= 0) {
+//        return;
+//    }
+    
+//    Reachability * reach = [Reachability reachabilityWithHostname:@"www.baidu.com"];
+//    if (![reach isReachable]) {
+//        [Utils alertView:@"网络异常,请检查网络连接!"];
+//        return;
+//    }
+    
+//    NSLog(@"%@",params);
+    
+    NSString *urlPath = [NSString stringWithFormat:@"%@v1/%@/wmw_m_i/%@/wmw_i_appstore/%@",BASE_URL,UUID,Version,path];
+    
+    NSURL *url = nil;
+    
+    url = [NSURL URLWithString:urlPath];
+
+    AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
+    
+    [httpClient setDefaultHeader:@"enctype" value:@"multipart/form-data"];
+    
+    
+    BOOL isHUD=NO;
+    
+    UIWindow *mainwindow=[[UIApplication sharedApplication].windows objectAtIndex:0];
+    
+    
+    for (UIView *v in mainwindow.subviews) {
+        if ([v isKindOfClass:[MBProgressHUD class]]) {
+            
+            isHUD=YES;
+        }
+    }
+    if ([path rangeOfString:@"microBeauty/consult/list"].location == NSNotFound && [path rangeOfString:@"ShopListServlet"].location == NSNotFound) {
+        //显示菊花
+        if (isHUD) {
+            
+            NSLog(@"isHUD");
+        }
+        else [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] windows] objectAtIndex:0] animated:YES];
+    }
+   
+    
+    
+    if ([method isEqualToString:@"POST"]) {
+        [httpClient postPath:urlPath parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            
+            NSString* string = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+            NSLog(@"%@",string.description);
+            
+            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+            
+            NSMutableDictionary *dict = [jsonParser objectWithString:string];
+            
+            //菊花消失
+            [MBProgressHUD hideHUDForView:[[UIApplication sharedApplication].windows objectAtIndex:0] animated:YES];
+            
+            success(dict);
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@"%@",error);
+            
+            for (UIView *v in [[[UIApplication sharedApplication].windows objectAtIndex:0] subviews]) {
+                if ([v isKindOfClass:[MBProgressHUD class]]) {
+                    
+                    MBProgressHUD *winHud=(MBProgressHUD *)v;
+                    winHud.labelText=@"加载失败";
+                    
+                }
+            }
+            [MBProgressHUD hideHUDForView:[[UIApplication sharedApplication].windows objectAtIndex:0] animated:YES];
+            
+            fail(error.description);
+        }];
+    }else{
+        [httpClient getPath:urlPath parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSString* string = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+            NSLog(@"%@",string.description);
+            
+            if ([path rangeOfString:@"sinaapp"].location != NSNotFound) {
+                //菊花消失
+                [MBProgressHUD hideHUDForView:[[UIApplication sharedApplication].windows objectAtIndex:0] animated:YES];
+                success(string);
+            }else{
+                
+                SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+                
+                NSMutableDictionary *dict = [jsonParser objectWithString:string];
+                
+                //菊花消失
+                [MBProgressHUD hideHUDForView:[[UIApplication sharedApplication].windows objectAtIndex:0] animated:YES];
+                
+                success(dict);
+            }
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//            NSLog(@"%@",error);
+//             [Utils alertView:@"网络异常,请检查网络连接!"];
+            for (UIView *v in [[[UIApplication sharedApplication].windows objectAtIndex:0] subviews]) {
+                if ([v isKindOfClass:[MBProgressHUD class]]) {
+                    
+                    MBProgressHUD *winHud=(MBProgressHUD *)v;
+                    winHud.labelText=@"加载失败/网络异常";
+                    
+                }
+            }
+            [MBProgressHUD hideHUDForView:[[UIApplication sharedApplication].windows objectAtIndex:0] animated:YES];
+            
+            fail(error.description);
+        }];
+    }
+}
+
++(void)uploadImage:(NSDictionary *)params path:(NSString *)path image:(NSArray *)imageArr file:file success:(void(^)(id object))success fail:(void(^)(NSString* msg))fail{
+    Reachability * reach = [Reachability reachabilityWithHostname:@"www.baidu.com"];
+    if (![reach isReachable]) {
+        [Utils alertView:@"网络异常,请检查网络连接!"];
+        return;
+    }
+    
+    NSString *urlPath = [NSString stringWithFormat:@"%@v1/%@/wmw_m_i/%@/wmw_i_appstore/%@",BASE_URL,UUID,Version,path];
+    
+    AFHTTPClient *client = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:urlPath]];
+    
+//    [client setDefaultHeader:@"enctype" value:@"multipart/form-data"];
+    
+    BOOL isHUD=NO;
+    
+    UIWindow *mainwindow=[[UIApplication sharedApplication].windows objectAtIndex:0];
+    
+    
+    for (UIView *v in mainwindow.subviews) {
+        if ([v isKindOfClass:[MBProgressHUD class]]) {
+            
+            isHUD=YES;
+        }
+    }
+    //显示菊花
+    if (isHUD) {
+        
+        NSLog(@"isHUD");
+    }
+    else [MBProgressHUD showHUDAddedTo:[[[UIApplication sharedApplication] windows] objectAtIndex:0] animated:YES];
+    
+    NSURLRequest *request = [client multipartFormRequestWithMethod:@"POST" path:urlPath parameters:params constructingBodyWithBlock:^(id formData) {
+        
+        //得到需要上传的数据
+        
+        for (int a = 0; a < imageArr.count; a++) {
+            UIImage *image = [imageArr objectAtIndex:a];
+            NSData *data=UIImageJPEGRepresentation(image,1.0);
+            
+            //上传时使用当前的系统事件作为文件名
+            
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+
+            formatter.dateFormat = @"yyyyMMddHHmmss";
+
+            NSString *str = [formatter stringFromDate:[NSDate date]];
+
+            NSString *fileName = [NSString stringWithFormat:@"%@.jpg", str];
+            
+            /*
+             
+             此方法参数
+             
+             1. 要上传的[二进制数据]
+             
+             2. 对应网站上[upload.php中]处理文件的[字段"file"]
+             
+             3. 要保存在服务器上的[文件名]
+             
+             4. 上传文件的[mimeType]
+             
+             */
+            
+            
+            //服务器上传文件的字段和类型
+            
+            [formData appendPartWithFileData:data name:file fileName:fileName mimeType:@"image/jpeg/file"];
+        }
+        
+        
+        
+    }];
+    
+    // 3. operation包装的urlconnetion
+    
+    AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    
+    [op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSLog(@"上传完成");
+        NSString* string = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+        NSLog(@"%@",string.description);
+        
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        
+        NSMutableDictionary *dict = [jsonParser objectWithString:string];
+        
+        [MBProgressHUD hideHUDForView:[[UIApplication sharedApplication].windows objectAtIndex:0] animated:YES];
+        
+        success(dict);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        for (UIView *v in [[[UIApplication sharedApplication].windows objectAtIndex:0] subviews]) {
+            if ([v isKindOfClass:[MBProgressHUD class]]) {
+                
+                MBProgressHUD *winHud=(MBProgressHUD *)v;
+                winHud.labelText=@"加载失败";
+                
+            }
+        }
+        [MBProgressHUD hideHUDForView:[[UIApplication sharedApplication].windows objectAtIndex:0] animated:YES];
+        NSLog(@"上传失败->%@", error);
+        fail(error.description);
+        
+    }];
+    
+    //执行
+    
+    [client.operationQueue addOperation:op];
+}
+
+
++(void)getData:(NSDictionary *)params path:(NSString *)path method:(NSString *)method success:(void(^)(id object))success fail:(void(^)(NSString* msg))fail{
+    //    if (params == nil || params.count <= 0) {
+    //        return;
+    //    }
+    
+    Reachability * reach = [Reachability reachabilityWithHostname:@"www.baidu.com"];
+    if (![reach isReachable]) {
+        if(fail){
+            fail(@"网络连接异常");
+        }
+        return;
+    }
+    
+    NSLog(@"%@",params);
+    
+    NSString *urlPath = [NSString stringWithFormat:@"%@v1/%@/wmw_m_i/%@/wmw_i_appstore/%@",BASE_URL,UUID,Version,path];
+    
+    NSURL *url = nil;
+    
+    url = [NSURL URLWithString:urlPath];
+    
+    AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
+    
+    [httpClient setDefaultHeader:@"enctype" value:@"multipart/form-data"];
+    
+
+    
+    
+    if ([method isEqualToString:@"POST"]) {
+        [httpClient postPath:urlPath parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            
+            NSString* string = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+            NSLog(@"%@",string.description);
+            
+            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+            
+            NSMutableDictionary *dict = [jsonParser objectWithString:string];
+            
+            //菊花消失
+            [MBProgressHUD hideHUDForView:[[UIApplication sharedApplication].windows objectAtIndex:0] animated:YES];
+            
+            success(dict);
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@"%@",error);
+            
+        
+            
+            fail(error.description);
+        }];
+    }else{
+        [httpClient getPath:urlPath parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSString* string = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+            NSLog(@"%@",string.description);
+            
+            if ([path rangeOfString:@"sinaapp"].location != NSNotFound) {
+               
+                success(string);
+            }else{
+                
+                SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+                
+                NSMutableDictionary *dict = [jsonParser objectWithString:string];
+                
+               
+                
+                success(dict);
+            }
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@",error);
+
+            
+            fail(error.description);
+        }];
+    }
+}
+
+
+@end

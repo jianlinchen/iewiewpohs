@@ -1,0 +1,141 @@
+//
+//  Demo2ViewController.m
+//  DLSlideViewDemo
+//
+//  Created by Dongle Su on 14-12-11.
+//  Copyright (c) 2014年 dongle. All rights reserved.
+//
+
+#import "Demo2ViewController.h"
+#import "DLScrollTabbarView.h"
+#import "DLLRUCache.h"
+#import "PageNViewController.h"
+#import "FavourViewController.h"
+#import "Demo3ViewController.h"
+#import "FavourViewController.h"
+#import "ProductViewController.h"
+@interface Demo2ViewController (){
+  
+    UIView *downView;
+    BOOL down;
+    UIButton *navButton;
+    NSString * serviecDex;
+    UIButton *btn1;
+    UIButton *btn2;
+    NSString *str;
+}
+
+@end
+
+@implementation Demo2ViewController{
+    NSMutableArray *itemArray_;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.automaticallyAdjustsScrollViewInsets = NO; // 如果你使用了UITabBarController, 系统会自动调整scrollView的inset。加上这个如果出错的话。
+    // Do any additional setup after loading the view from its nib.
+//     [self product];
+    DLLRUCache *cache = [[DLLRUCache alloc] initWithCount:6];
+    DLScrollTabbarView *tabbar = [[DLScrollTabbarView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 34)];
+    tabbar.tabItemNormalColor = [UIColor blackColor];
+    tabbar.tabItemSelectedColor = [UIColor colorWithRed:0x00/255.0 green:0xb7/255.0 blue:0xee/255.0 alpha:1.0];
+    tabbar.tabItemNormalFontSize = 16.0f;
+    tabbar.trackColor =[UIColor colorWithRed:0x00/255.0 green:0xb7/255.0 blue:0xee/255.0 alpha:1.0];
+    itemArray_ = [NSMutableArray array];
+    DLScrollTabbarItem *item1 = [DLScrollTabbarItem itemWithTitle:@"全部" width:50];
+    [itemArray_ addObject:item1];
+    DLScrollTabbarItem *item2 = [DLScrollTabbarItem itemWithTitle:@"待审核" width:75];
+    [itemArray_ addObject:item2];
+    DLScrollTabbarItem *item3 = [DLScrollTabbarItem itemWithTitle:@"审核通过" width:90];
+    [itemArray_ addObject:item3];
+    DLScrollTabbarItem *item4 = [DLScrollTabbarItem itemWithTitle:@"审核不通过" width:120];
+    [itemArray_ addObject:item4];
+    DLScrollTabbarItem *item5 = [DLScrollTabbarItem itemWithTitle:@"上架" width:50];
+    [itemArray_ addObject:item5];
+    DLScrollTabbarItem *item6 = [DLScrollTabbarItem itemWithTitle:@"下架" width:50];
+    [itemArray_ addObject:item6];
+    DLScrollTabbarItem *item7 = [DLScrollTabbarItem itemWithTitle:@"违规下架" width:90];
+    [itemArray_ addObject:item7];
+    tabbar.tabbarItems =[[NSArray alloc]initWithObjects:item1,item2,item3,item4,item5,item6,item7, nil];
+    self.slideView.tabbar = tabbar;
+    self.slideView.cache = cache;
+    self.slideView.tabbarBottomSpacing = 5;
+    self.slideView.baseViewController = self;
+    [self.slideView setup];
+    self.slideView.selectedIndex = 0;
+    serviecDex=@"1";
+    self.navTitleView.backgroundColor=[UIColor colorWithRed:0x00/255.0 green:0xb7/255.0 blue:0xee/255.0 alpha:1.0];
+   
+
+
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+-(void)product{
+    down=YES;
+    self.navTopImageView.image=[UIImage imageNamed:@"1_down.png"];
+
+    [downView removeFromSuperview];
+}
+
+-(void)service{
+    down=YES;
+    self.navTopImageView.image=[UIImage imageNamed:@"1_down.png"];
+    [downView removeFromSuperview];
+    Demo3ViewController *Vc=[[Demo3ViewController alloc]init];
+    [self.navigationController pushViewController:Vc animated:NO];
+    
+}
+- (NSInteger)numberOfTabsInDLCustomSlideView:(DLCustomSlideView *)sender{
+    return itemArray_.count;
+}
+
+- (UIViewController *)DLCustomSlideView:(DLCustomSlideView *)sender controllerAt:(NSInteger)index{
+    ProductViewController *ctrl = [[ProductViewController alloc] init];
+    ctrl.verStr = serviecDex;
+    ctrl.ttt= [NSString stringWithFormat:@"%ld", (long)index];
+       return ctrl;
+   }
+-(void)viewWillDisappear:(BOOL)animated{
+    [self.navTitleView removeFromSuperview];
+    [downView removeFromSuperview];
+   
+}
+-(void)viewWillAppear:(BOOL)animated{
+    down=YES;
+    self.navTitleView.center=CGPointMake(KScreenWidth/2, 20);
+    [self .navigationController.navigationBar addSubview:self.navTitleView];
+
+}
+- (IBAction)navTopButton:(id)sender {
+    if (down){
+        self.navTopImageView.image=[UIImage imageNamed:@"1_top.png"];
+
+        [downView removeFromSuperview];
+        down=YES;
+        downView=[[UIView alloc]initWithFrame:CGRectMake(100, 64, 120, 90)];
+        downView.center=CGPointMake(KScreenWidth/2, 100);
+        btn1=[[UIButton alloc]initWithFrame:CGRectMake(10, 5,100 , 40)];
+        [btn1 setTitle:@"产品" forState:UIControlStateNormal];
+        [btn1 setTitleColor:[UIColor colorWithRed:0x00/255.0 green:0xb7/255.0 blue:0xee/255.0 alpha:1.0] forState:UIControlStateNormal];
+        [btn1 addTarget:self action:@selector(product) forControlEvents:UIControlEventTouchUpInside ];
+        btn2=[[UIButton alloc]initWithFrame:CGRectMake(10, 45,100 , 40)];
+        [btn2 setTitle:@"服务" forState:UIControlStateNormal];
+        [btn2 addTarget:self action:@selector(service) forControlEvents:UIControlEventTouchUpInside ];
+        [downView addSubview:btn1];
+        [downView addSubview:btn2];
+        downView.backgroundColor=[UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
+        [self.navigationController.navigationBar.window  addSubview:downView];
+        down=NO;
+    }else{
+        self.navTopImageView.image=[UIImage imageNamed:@"1_down.png"];
+        [downView removeFromSuperview];
+        down=YES;
+    }
+
+}
+@end

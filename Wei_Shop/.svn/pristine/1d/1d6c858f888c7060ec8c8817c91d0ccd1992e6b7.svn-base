@@ -1,0 +1,160 @@
+//
+//  LoginViewController.m
+//  Wei_Shop
+//
+//  Created by Geniune on 15/11/2.
+//  Copyright © 2015年 cjl. All rights reserved.
+//
+
+#import "LoginViewController.h"
+#import "RYRsaSign.h"
+#import "RSA.h"
+#import "UserConstant.h"
+#import "UserRuleViewController.h"
+#import "Reachability.h"
+#import "AgremmentController.h"
+@interface LoginViewController ()<UIActionSheetDelegate>
+@property (weak, nonatomic) IBOutlet UITextField *acount;
+@property (weak, nonatomic) IBOutlet UITextField *passWord;
+@property (weak, nonatomic) IBOutlet UIButton *loginBtn;
+
+@end
+
+@implementation LoginViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    self.passWord.tintColor=[UIColor redColor];
+    self.passWord.secureTextEntry = YES;
+    self.loginBtn.layer.masksToBounds = YES;
+    self.loginBtn.layer.cornerRadius = 4.0f;
+    [self.loginBtn addTarget:self action:@selector(loginAction) forControlEvents:UIControlEventTouchUpInside];
+
+    
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    NSString *account = [[NSUserDefaults standardUserDefaults] objectForKey:Account];
+    NSString *passWord = [[NSUserDefaults standardUserDefaults] objectForKey:Password];
+    
+    if(account && ![account isEqualToString:@""]){
+        self.acount.text = account;
+    }else{
+        self.acount.text = @"";
+    }
+    if(passWord && ![passWord isEqualToString:@""]){
+        self.passWord.text = passWord;
+    }else{
+        self.passWord.text = @"";
+    }
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
+
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+    [self.navigationController setNavigationBarHidden:NO animated:NO];
+    
+}
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    //隐藏键盘
+    [self.acount resignFirstResponder];
+    [self.passWord resignFirstResponder];
+    //    if (p==1 ) {
+    //         [self resumeView];
+    //    }
+    
+}
+
+- (void)loginAction{
+    
+    
+    if([self.acount.text isEqualToString:@""]){
+        [SVProgressHUD showErrorWithStatus:@"请输入账号"];
+        return;
+    }
+    if([self.passWord.text isEqualToString:@""]) {
+        [SVProgressHUD showErrorWithStatus:@"请输入密码"];
+        return;
+    }
+    Reachability * reach = [Reachability reachabilityWithHostname:@"www.baidu.com"];
+    if (![reach isReachable]) {
+        [SVProgressHUD showErrorWithStatus:@"网络连接异常"];
+       
+        return;
+    }
+
+    
+    NSString *public = [[NSUserDefaults standardUserDefaults] objectForKey:PublicKey];
+    BOOL deviceRes = [[NSUserDefaults standardUserDefaults] boolForKey:ResigteDevice];
+    
+    if(public == nil || [public isEqualToString:@""] || !deviceRes){
+        
+        if(!deviceRes){
+            [SVProgressHUD showErrorWithStatus:@"正在重新注册设备"];
+            [GLOBARMANAGER ResigterDevice];
+        }
+        
+        if(!public || [GLOBARMANAGER.publicKey isEqualToString:@""]){
+            [SVProgressHUD showErrorWithStatus:@"正在获取PublicKey"];
+            [GLOBARMANAGER requestPublicKeyCallback:^(NSString *obj) {
+                
+            }];
+        }
+        return;
+        
+    }else{
+        [self login];
+    }
+    
+}
+
+#pragma mark - 登录接口调用
+- (void)login{
+    
+    self.loginBtn.enabled = NO;
+
+        [GLOBARMANAGER loginHTTPAccount:self.acount.text password:self.passWord.text Success:^(id obj) {
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"LoginSuccess" object:nil];
+            self.loginBtn.enabled = YES;
+        } failure:^(NSString *msg) {
+            [SVProgressHUD showErrorWithStatus:msg];
+            self.loginBtn.enabled = YES;
+        }];
+   
+}
+- (IBAction)userRule:(id)sender {
+    
+//    UserRuleViewController *VC = [[UserRuleViewController alloc]init];
+     AgremmentController *VC = [[AgremmentController alloc]initWithNibName:@"AgremmentController" bundle:nil];
+    VC.URL = OurWebUrl;
+//    VC.title = @"用户协议";
+ [self presentViewController:VC animated:NO completion:NULL];
+  
+}
+- (IBAction)connectUs:(id)sender {
+    
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:OurTelNumber, nil];
+    [actionSheet showInView:self.view];
+}
+
+#pragma mark - UIActionSheetDelegate
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    if(buttonIndex == 0){
+        [[UIApplication sharedApplication]openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",OurTelNumber]]];
+    }
+}
+
+@end

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MassEmailController">
+            <connections>
+                <outlet property="selectImageView" destination="PyU-yC-77N" id="53F-Qp-zMD"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="86Y-o9-1DI">
+                    <rect key="frame" x="235" y="10" width="70" height="36"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="70" id="7RS-OJ-sU9"/>
+                        <constraint firstAttribute="height" constant="36" id="Szk-sv-C2h"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <state key="normal" title="全选">
+                        <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="7RS-OJ-sU9"/>
+                            <exclude reference="Szk-sv-C2h"/>
+                        </mask>
+                    </variation>
+                    <variation key="heightClass=regular-widthClass=compact">
+                        <mask key="constraints">
+                            <include reference="7RS-OJ-sU9"/>
+                            <include reference="Szk-sv-C2h"/>
+                        </mask>
+                    </variation>
+                    <connections>
+                        <action selector="allSelectAction:" destination="-1" eventType="touchUpInside" id="p6T-yk-3Oq"/>
+                    </connections>
+                </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="2_noSelect.png" translatesAutoresizingMaskIntoConstraints="NO" id="PyU-yC-77N">
+                    <rect key="frame" x="251" y="12" width="25" height="25"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="25" id="78o-8H-ZRe"/>
+                        <constraint firstAttribute="width" constant="25" id="exu-2J-Ric"/>
+                        <constraint firstAttribute="width" constant="25" id="ryC-Nu-wo6"/>
+                        <constraint firstAttribute="height" constant="25" id="vmN-U9-ygh"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="78o-8H-ZRe"/>
+                            <exclude reference="exu-2J-Ric"/>
+                            <exclude reference="ryC-Nu-wo6"/>
+                            <exclude reference="vmN-U9-ygh"/>
+                        </mask>
+                    </variation>
+                    <variation key="heightClass=regular-widthClass=compact">
+                        <mask key="constraints">
+                            <include reference="78o-8H-ZRe"/>
+                            <include reference="exu-2J-Ric"/>
+                            <exclude reference="ryC-Nu-wo6"/>
+                            <exclude reference="vmN-U9-ygh"/>
+                        </mask>
+                    </variation>
+                </imageView>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" red="0.97254901959999995" green="0.97254901959999995" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="86Y-o9-1DI" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="8" id="3Bh-sP-JRp"/>
+                <constraint firstAttribute="trailing" secondItem="86Y-o9-1DI" secondAttribute="trailing" constant="8" id="S2E-vt-JY6"/>
+                <constraint firstItem="PyU-yC-77N" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="327" id="TYm-fa-jx7"/>
+                <constraint firstAttribute="trailing" secondItem="PyU-yC-77N" secondAttribute="trailing" constant="44" id="fQn-7v-9RN"/>
+                <constraint firstItem="PyU-yC-77N" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="11" id="j5b-23-7KN"/>
+                <constraint firstItem="PyU-yC-77N" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="11" id="oeC-gb-1zi"/>
+            </constraints>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="3Bh-sP-JRp"/>
+                    <exclude reference="S2E-vt-JY6"/>
+                    <exclude reference="TYm-fa-jx7"/>
+                    <exclude reference="fQn-7v-9RN"/>
+                    <exclude reference="j5b-23-7KN"/>
+                    <exclude reference="oeC-gb-1zi"/>
+                </mask>
+            </variation>
+            <variation key="heightClass=regular-widthClass=compact">
+                <mask key="constraints">
+                    <include reference="3Bh-sP-JRp"/>
+                    <include reference="S2E-vt-JY6"/>
+                    <exclude reference="TYm-fa-jx7"/>
+                    <include reference="fQn-7v-9RN"/>
+                    <include reference="j5b-23-7KN"/>
+                    <exclude reference="oeC-gb-1zi"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="344" y="267"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="2_noSelect.png" width="31" height="31"/>
+    </resources>
+</document>

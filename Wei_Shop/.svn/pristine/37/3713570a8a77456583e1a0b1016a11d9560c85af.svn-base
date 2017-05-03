@@ -1,0 +1,25 @@
+//
+//  Client.m
+//  Wei_Shop
+//
+//  Created by dzr on 15/10/30.
+//  Copyright (c) 2015年 cjl. All rights reserved.
+//
+
+#import "Client.h"
+
+@implementation Client
+-(void)getClient:(NSDictionary *)p{
+    Dictionary2Object(p, @"customerId", self.customerId);
+    Dictionary2Object(p, @"userId", self.userId);
+    Dictionary2Object(p, @"userName", self.userName);
+    Dictionary2Object(p, @"nickName", self.nickName);
+    Dictionary2Object(p, @"remark", self.remark);
+    Dictionary2Object(p, @"spell", self.spell);
+    Dictionary2Object(p, @"icon", self.icon);
+    Dictionary2Object(p, @"mobile", self.mobile);
+    Dictionary2Object(p, @"remark", self.remark);
+    Dictionary2Object(p, @"tagIds", self.tagIds);
+}
+
+@end

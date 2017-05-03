@@ -1,0 +1,61 @@
+//
+//  ComentController.m
+//  Wei_Shop
+//
+//  Created by dzr on 15/12/2.
+//  Copyright © 2015年 cjl. All rights reserved.
+//
+
+#import "ComentController.h"
+#import "ComentTableCell.h"
+@interface ComentController ()
+
+@end
+
+@implementation ComentController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+  
+    self.commentTableview.delegate=self;
+    self.commentTableview.dataSource=self;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    static NSString *CellIdentifier = @"ComentTableCell";
+    ComentTableCell*cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (!cell) {
+        NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"ComentTableCell" owner:self options:nil];
+        cell = [nib objectAtIndex:0];
+    }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    return cell ;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 280;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 10;
+}
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    
+    return 1;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

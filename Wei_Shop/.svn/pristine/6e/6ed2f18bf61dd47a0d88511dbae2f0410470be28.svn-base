@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UserRuleViewController">
+            <connections>
+                <outlet property="aggrementWebView" destination="IQZ-mF-iTo" id="cYh-ZA-u2C"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="sKO-bI-h6I">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="2_nav.png" translatesAutoresizingMaskIntoConstraints="NO" id="qE6-UX-mK9">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                    <animations/>
+                    <variation key="widthClass=compact" fixedFrame="YES">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="45"/>
+                    </variation>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z1x-gd-bhA">
+                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                    <animations/>
+                    <state key="normal" image="返回"/>
+                    <variation key="widthClass=compact" fixedFrame="YES">
+                        <rect key="frame" x="18" y="12" width="26" height="22"/>
+                    </variation>
+                    <connections>
+                        <action selector="backAction:" destination="-1" eventType="touchUpInside" id="1p9-KK-s20"/>
+                    </connections>
+                </button>
+                <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IQZ-mF-iTo">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                    <animations/>
+                    <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
+                    <variation key="widthClass=compact" fixedFrame="YES">
+                        <rect key="frame" x="0.0" y="42" width="320" height="526"/>
+                    </variation>
+                </webView>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="subviews">
+                    <exclude reference="qE6-UX-mK9"/>
+                    <exclude reference="z1x-gd-bhA"/>
+                    <exclude reference="IQZ-mF-iTo"/>
+                </mask>
+            </variation>
+            <variation key="widthClass=compact">
+                <mask key="subviews">
+                    <include reference="qE6-UX-mK9"/>
+                    <include reference="z1x-gd-bhA"/>
+                    <include reference="IQZ-mF-iTo"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="302" y="342"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="2_nav.png" width="540" height="66"/>
+        <image name="返回" width="26" height="19"/>
+    </resources>
+</document>

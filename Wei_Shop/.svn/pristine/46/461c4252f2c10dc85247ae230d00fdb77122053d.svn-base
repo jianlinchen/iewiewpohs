@@ -1,0 +1,21 @@
+//
+//  PostEmailController.h
+//  Wei_Shop
+//
+//  Created by dzr on 15/11/5.
+//  Copyright © 2015年 cjl. All rights reserved.
+//
+#import "BaseViewController.h"
+#import <UIKit/UIKit.h>
+
+@interface PostEmailController : BaseViewController<UITextViewDelegate,UITextViewDelegate>
+@property(strong,nonatomic)NSMutableArray *cusArray;
+
+@property (strong, nonatomic) IBOutlet UILabel *nameArrayLabel;
+@property (strong, nonatomic) IBOutlet UIView *moveView;
+@property (strong, nonatomic) IBOutlet UIView *topView;
+@property (strong, nonatomic) IBOutlet UITextView *moveTextView;
+- (IBAction)postAction:(id)sender;
+@property (strong, nonatomic) IBOutlet UITextView *messageTextView;
+
+@end

@@ -1,0 +1,394 @@
+//
+//  DetailCustomController.m
+//  Wei_Shop
+//
+//  Created by dzr on 15/11/3.
+//  Copyright © 2015年 cjl. All rights reserved.
+//
+
+#import "DetailCustomController.h"
+#import "DetailCusomTableViewCell.h"
+#import "SetBeiZhuController.h"
+#import "TwoDetailTableCell.h"
+@interface DetailCustomController ()
+@end
+@implementation DetailCustomController{
+    NSMutableArray *tagListArray;
+      NSMutableArray *recordListArray;
+     NSMutableArray *scoreListArray;
+    NSString *genStr;
+    NSString *age;
+    NSString *cityStr;
+    
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    self.clinentButton.layer.masksToBounds = YES;
+    self.clinentButton.layer.cornerRadius = 12.5f;
+    self.clinentButton.layer.borderWidth = 0.5f;
+    self.clinentButton.layer.borderColor = [UIColor whiteColor].CGColor;
+    
+    tagListArray=[[NSMutableArray alloc]init];
+    recordListArray=[[NSMutableArray alloc]init];
+
+    self.detailTableView.delegate=self;
+    self.detailTableView.dataSource=self;
+    
+//        UIView *view = [[UIView alloc]init];
+    self.detailTableView .tableFooterView = [[UIView alloc]init];
+    
+    self.detailTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    CGRect rect = self.detailHeaderView.frame;
+    rect.size.width = APP_W;
+    self.detailHeaderView.frame = rect;
+    
+    self.detailTableView.tableHeaderView=self.detailHeaderView;
+    
+    self.clientImageView.layer.cornerRadius = self.clientImageView.frame.size.width /2;
+     self.clientImageView.clipsToBounds = YES;
+     self.clientImageView.layer.borderWidth = 0.0f;
+    self.clientImageView.imageURL=self.detailClient.icon;
+    
+    self.clientNickLabel.text=self.detailClient.nickName;
+    self.clientRemakLabel.text=self.detailClient.remark == nil?@"":self.detailClient.remark;
+    
+    
+    
+    
+    
+    NSString *tt=self.detailClient.mobile;
+    [self.clinentButton setTitle:[NSString stringWithFormat:@"  %@",tt] forState:UIControlStateNormal];
+    
+    [self loadData];
+    //接收通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tongzhi:) name:@"tongzhi" object:nil];
+//
+}
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
+
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:NO animated:NO];
+    
+}
+
+- (void)tongzhi:(NSNotification *)text{
+    if(text.object == nil || ![text.object isKindOfClass:[NSString class]]){
+        self.clientRemakLabel.text = @"";
+    }else{
+        self.clientRemakLabel.text =[NSString stringWithFormat:@"备注:%@", text.object];
+    }
+}
+
+-(void)loadData{
+
+//    NSDictionary *dic = @{@"shopId":GLOBARMANAGER.userConfig.shopId,@"pageIndex":@(1),@"customerId":self.detailClient.customerId,@"pageSize":@(3)};
+//     NSDictionary *dic = @{@"shopId":GLOBARMANAGER.userConfig.shopId,@"pageIndex":@(1),@"customerId":self.detailClient.customerId,@"pageSize":@(3)};
+    
+    
+    
+    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:
+                        GLOBARMANAGER.userConfig.shopId,@"shopId",
+                                                    @"1",@"pageIndex",
+                            self.detailClient.customerId,@"customerId",
+                                                    @"3",@"pageSize",
+                                                                nil];
+    
+    
+    
+    [HttpRequest getWebData:[GLOBARMANAGER AppKeyTokenDic:dic] path:DetailCustomer method:@"GET" success:^(id object) {
+        if (object) {if ([[object objectForKey:@"success"]intValue] == 1) {
+             NSDictionary * dic= [object objectForKey:@"result"];
+           
+            self.clientImageView.imageURL=[dic objectForKey:@"icon"];
+            self.clientNickLabel.text=[dic objectForKey:@"nickName"];
+            
+            NSString *remark = [dic objectForKey:@"remark"];
+            
+            if ([dic objectForKey:@"remark"] == [NSNull null] || [remark isEqualToString:@"null"] || [remark isEqualToString:@"<null>"]) {
+                self.clientRemakLabel.text = @"";
+            }else{
+                self.clientRemakLabel.text = [NSString stringWithFormat:@"备注:%@",remark];
+            }
+            
+            NSString *tt=[dic objectForKey:@"mobile"];
+          [self.clinentButton setTitle:[NSString stringWithFormat:@"  %@",tt] forState:UIControlStateNormal];
+           
+            
+            if ([dic objectForKey:@"gender"] == [NSNull null] ) {
+                 genStr = @"";
+            }else{
+                genStr =[dic objectForKey:@"gender"];
+            }
+
+            //年龄
+           
+       
+            if ([dic objectForKey:@"age"] == [NSNull null] ) {
+                age= @"";
+            }else{
+                age = [NSString stringWithFormat:@"%@",[dic objectForKey:@"age"]];
+            }
+//
+            
+            //地址
+            if ([dic objectForKey:@"cityName"] == [NSNull null] ) {
+                cityStr = @"";
+            }else{
+                cityStr =[dic objectForKey:@"cityName"];
+            }
+
+            
+            [self gend:genStr addAge:age addCity:cityStr];
+            
+            tagListArray=[dic objectForKey:@"tagList"];
+            
+            recordListArray=[dic objectForKey:@"recordList"];
+                      if (recordListArray.count!=0) {
+                 self.clientcountLabel.text=[NSString stringWithFormat:@"Ta的最近%ld条数据",recordListArray.count];
+            }else{
+                 self.clientcountLabel.text=[NSString stringWithFormat:@"Ta暂无数据"];
+            }
+           [self.detailTableView reloadData];
+
+           }
+            
+        }
+    } fail:^(NSString *msg) {
+        
+    }];
+  
+}
+
+-(void)gend:(NSString *)str1   addAge:(NSString * )str2 addCity:(NSString *)str3{
+
+    if(str1.length!=0&&str2.length!=0&str3.length!=0){
+        
+        self.clientGenderLabel.hidden=YES;
+        self.detailLeftLabel.hidden=YES;
+        self.detailRightLabel.hidden=YES;
+        self.clientGenderLabel.hidden=YES;
+        self.clientAddresLabel.hidden=YES;
+
+   
+        NSString *yrStr=[[NSString alloc]init];
+        if ([str1 isEqual:@"M"]) {
+            
+            yrStr=@"男";
+        }else{
+            yrStr=@"女";
+        }
+
+        UILabel *allLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,0 , KScreenWidth-70, 25)];
+        allLabel.center=CGPointMake(self.view.center.x, 178);
+        allLabel.textColor=[UIColor whiteColor];
+        allLabel.textAlignment= NSTextAlignmentCenter;
+        allLabel.text=[NSString stringWithFormat:@"%@ | %@岁 | %@",yrStr,str2,str3];
+        [self.detailHeaderView addSubview:allLabel];
+
+   
+    }
+    //有两个值
+    else if (str1.length==0&&str2.length!=0&str3.length!=0){
+        self.clientGenderLabel.hidden=YES;
+        self.detailLeftLabel.hidden=YES;
+        self.detailRightLabel.hidden=YES;
+        self.clientGenderLabel.hidden=YES;
+        self.clientAddresLabel.hidden=YES;
+        UILabel *allLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,0 , KScreenWidth-70, 25)];
+        allLabel.center=CGPointMake(self.view.center.x, 178);
+        allLabel.textColor=[UIColor whiteColor];
+        allLabel.textAlignment= NSTextAlignmentCenter;
+        allLabel.text=[NSString stringWithFormat:@"%@岁 | %@",str2,str3];
+        [self.detailHeaderView addSubview:allLabel];
+       
+        
+    }else if (str1.length!=0&&str2.length==0&str3.length!=0){
+        self.clientGenderLabel.hidden=YES;
+        self.detailLeftLabel.hidden=YES;
+        self.detailRightLabel.hidden=YES;
+        self.clientGenderLabel.hidden=YES;
+        self.clientAddresLabel.hidden=YES;
+        self.clientAddresLabel.hidden=YES;
+        
+        NSString *yrStr=[[NSString alloc]init];
+        if ([str1 isEqual:@"M"]) {
+            
+            yrStr=@"男";
+        }else{
+           yrStr=@"女";
+        }
+        
+        
+        UILabel *allLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,0 , KScreenWidth-70, 25)];
+        allLabel.center=CGPointMake(self.view.center.x, 178);
+        allLabel.textColor=[UIColor whiteColor];
+        allLabel.textAlignment= NSTextAlignmentCenter;
+        allLabel.text=[NSString stringWithFormat:@"%@ | %@",yrStr,str3];
+        [self.detailHeaderView addSubview:allLabel];
+
+        
+        
+    }else if (str1.length!=0&&str2.length!=0&str3.length==0){
+        self.clientGenderLabel.hidden=YES;
+        self.detailLeftLabel.hidden=YES;
+        self.detailRightLabel.hidden=YES;
+        self.clientGenderLabel.hidden=YES;
+        self.clientAddresLabel.hidden=YES;
+        NSString *yrStr=[[NSString alloc]init];
+        if ([str1 isEqual:@"M"]) {
+            
+            yrStr=@"男";
+        }else{
+            yrStr=@"女";
+        }
+        
+        
+        UILabel *allLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,0 , KScreenWidth-70, 25)];
+        allLabel.center=CGPointMake(self.view.center.x, 178);
+        allLabel.textColor=[UIColor whiteColor];
+        allLabel.textAlignment= NSTextAlignmentCenter;
+        allLabel.text=[NSString stringWithFormat:@"%@ | %@岁",yrStr,str2];
+        [self.detailHeaderView addSubview:allLabel];
+        
+        
+        //只有一个值
+        
+    }else if (str1.length!=0&&str2.length==0&str3.length==0 ){
+        self.clientGenderLabel.hidden=YES;
+        self.detailLeftLabel.hidden=YES;
+        self.detailRightLabel.hidden=YES;
+        self.clientGenderLabel.hidden=YES;
+        self.clientAddresLabel.hidden=YES;
+        
+        NSString *yrStr=[[NSString alloc]init];
+        if ([str1 isEqual:@"M"]) {
+            
+            yrStr=@"男";
+        }else{
+            yrStr=@"女";
+        }
+        
+        
+        UILabel *allLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,0 , KScreenWidth-70, 25)];
+        allLabel.center=CGPointMake(self.view.center.x, 178);
+        allLabel.textColor=[UIColor whiteColor];
+        allLabel.textAlignment= NSTextAlignmentCenter;
+        allLabel.text=[NSString stringWithFormat:@"%@",yrStr];
+        [self.detailHeaderView addSubview:allLabel];
+
+        
+
+    }else if (str1.length==0&&str2.length!=0&str3.length==0 ){
+        self.clientGenderLabel.hidden=YES;
+        self.detailLeftLabel.hidden=YES;
+        self.detailRightLabel.hidden=YES;
+        self.clientGenderLabel.hidden=YES;
+        self.clientAddresLabel.hidden=YES;
+        
+        UILabel *allLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,0 , KScreenWidth-70, 25)];
+        allLabel.center=CGPointMake(self.view.center.x, 178);
+        allLabel.textColor=[UIColor whiteColor];
+        allLabel.textAlignment= NSTextAlignmentCenter;
+        allLabel.text=[NSString stringWithFormat:@"%@岁",str2];
+        [self.detailHeaderView addSubview:allLabel];
+        
+        
+    }else if (str1.length==0&&str2.length==0&str3.length!=0 ){
+        self.clientGenderLabel.hidden=YES;
+        self.detailLeftLabel.hidden=YES;
+        self.detailRightLabel.hidden=YES;
+        self.clientGenderLabel.hidden=YES;
+        self.clientAddresLabel.hidden=YES;
+        self.clientAddresLabel.hidden=YES;
+        
+        UILabel *allLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,0 , KScreenWidth-70, 25)];
+        allLabel.center=CGPointMake(self.view.center.x, 178);
+        allLabel.textColor=[UIColor whiteColor];
+        allLabel.textAlignment= NSTextAlignmentCenter;
+        allLabel.text=[NSString stringWithFormat:@"%@",str3];
+        [self.detailHeaderView addSubview:allLabel];
+        
+    }else{
+        self.clientGenderLabel.hidden=YES;
+        self.detailLeftLabel.hidden=YES;
+        self.detailRightLabel.hidden=YES;
+        self.clientGenderLabel.hidden=YES;
+        self.clientAddresLabel.hidden=YES;
+    }
+
+
+
+        
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.row==0) {
+        static NSString *CellIdentifier = @"TwoDetailTableCell";
+        TwoDetailTableCell*cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (!cell) {
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"TwoDetailTableCell" owner:self options:nil];
+            cell = [nib objectAtIndex:0];
+            
+        }
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        return cell ;
+        
+    }else{
+
+    static NSString *CellIdentifier = @"DetailCusomTableViewCell";
+    DetailCusomTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (!cell) {
+        
+        cell = [[[NSBundle mainBundle]loadNibNamed:@"DetailCusomTableViewCell" owner:self options:nil]lastObject];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+        NSDictionary *dic=[recordListArray objectAtIndex:indexPath.row - 1];
+        [cell setCell:dic];
+        
+        return cell ;
+    }
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.row==0) {
+        return 45;
+    }else{
+        return 85;
+    }
+}
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return recordListArray.count+1;
+}
+
+- (IBAction)changeNameAction:(id)sender {
+    SetBeiZhuController *qc = [[SetBeiZhuController alloc]initWithNibName:@"SetBeiZhuController" bundle:nil];
+    qc.title=@"设置备注名";
+    qc.Id=self.detailClient.customerId;
+    [self.navigationController pushViewController:qc animated:YES];
+}
+
+- (IBAction)callACtion:(id)sender {
+    
+    NSString *tel = self.clinentButton.titleLabel.text;
+    
+    tel = [tel  stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    [[UIApplication sharedApplication]openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",tel]]];
+}
+
+- (IBAction)popBckAction:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+
+}
+@end

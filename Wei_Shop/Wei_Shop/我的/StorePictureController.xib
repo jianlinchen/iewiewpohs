@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9527.1" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9525.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="StorePictureController">
+            <connections>
+                <outlet property="myCollectionView" destination="psQ-S0-OqG" id="MSD-QT-PnZ"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="psQ-S0-OqG">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="RDM-HF-BmC">
+                        <size key="itemSize" width="50" height="50"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                    <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                        <rect key="frame" x="0.0" y="0.0" width="400" height="600"/>
+                    </variation>
+                    <connections>
+                        <outlet property="dataSource" destination="i5M-Pr-FkT" id="zqY-tv-ZHA"/>
+                        <outlet property="delegate" destination="i5M-Pr-FkT" id="Ybn-yu-z87"/>
+                    </connections>
+                </collectionView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="psQ-S0-OqG" secondAttribute="trailing" id="CKC-ap-hRg"/>
+                <constraint firstItem="psQ-S0-OqG" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="EWc-oi-whq"/>
+                <constraint firstAttribute="bottom" secondItem="psQ-S0-OqG" secondAttribute="bottom" id="EeV-h7-83T"/>
+                <constraint firstAttribute="trailing" secondItem="psQ-S0-OqG" secondAttribute="trailing" id="FfA-d8-Yas"/>
+                <constraint firstItem="psQ-S0-OqG" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="P9O-0o-vyU"/>
+                <constraint firstAttribute="bottom" secondItem="psQ-S0-OqG" secondAttribute="bottom" id="Yl6-c2-IeE"/>
+                <constraint firstItem="psQ-S0-OqG" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="exX-WD-PGD"/>
+                <constraint firstItem="psQ-S0-OqG" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="hMI-m2-Hcy"/>
+            </constraints>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="CKC-ap-hRg"/>
+                    <exclude reference="EWc-oi-whq"/>
+                    <exclude reference="EeV-h7-83T"/>
+                    <exclude reference="FfA-d8-Yas"/>
+                    <exclude reference="P9O-0o-vyU"/>
+                    <exclude reference="Yl6-c2-IeE"/>
+                    <exclude reference="exX-WD-PGD"/>
+                    <exclude reference="hMI-m2-Hcy"/>
+                </mask>
+            </variation>
+            <variation key="heightClass=regular-widthClass=compact">
+                <mask key="constraints">
+                    <include reference="CKC-ap-hRg"/>
+                    <include reference="EWc-oi-whq"/>
+                    <include reference="EeV-h7-83T"/>
+                    <include reference="FfA-d8-Yas"/>
+                    <include reference="P9O-0o-vyU"/>
+                    <include reference="Yl6-c2-IeE"/>
+                    <include reference="exX-WD-PGD"/>
+                    <include reference="hMI-m2-Hcy"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="182" y="294"/>
+        </view>
+    </objects>
+</document>
